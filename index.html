@@ -94,27 +94,24 @@
       let myp5 = new p5(sketch);
     </script>
     <script>
-      window.onload = function () {
-        const audioContext = new (window.AudioContext ||
-          window.webkitAudioContext)();
+      window.onload = async function () {
+        const audioContext = new (window.OfflineAudioContext ||
+          window.webkitOfflineAudioContext)(1, 44100, 44100);
         const analyser = audioContext.createAnalyser();
         const canvas = document.createElement("canvas");
         document.body.appendChild(canvas);
         const canvasCtx = canvas.getContext("2d");
         const waves = [];
 
-        navigator.mediaDevices
-          .getUserMedia({ audio: true })
-          .then((stream) => {
-            const source = audioContext.createMediaStreamSource(stream);
-            source.connect(analyser);
-            // Commenting out the line below to disable audio playback
-            // analyser.connect(audioContext.destination);
-            visualize();
-          })
-          .catch((err) => {
-            console.error("Error accessing microphone:", err);
-          });
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const source = audioContext.createMediaStreamSource(stream);
+          source.connect(analyser);
+          // No need to connect to audioContext.destination
+          visualize();
+        } catch (err) {
+          console.error("Error accessing microphone:", err);
+        }
 
         function Wave(x, y, speed, amplitude, frequency) {
           this.x = x;
@@ -202,5 +199,3 @@
   </head>
   <body></body>
 </html>
-
-
