@@ -28,7 +28,8 @@
         width: 50vw; /* Half of the screen width */
         height: 50vh; /* Half of the screen height */
         z-index: 1; /* Place audio visualizer above video visualizer */
-        /* Set the background color to dark gray */
+        /* Set the background color to transparent */
+        background-color: transparent;
       }
 
       #video-visualizer {
@@ -172,8 +173,7 @@
           function draw() {
             analyser.getByteFrequencyData(dataArray);
 
-            canvasCtx.fillStyle = "#150296"; // Set background color to dark gray
-            canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+            canvasCtx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
             for (let i = 0; i < bufferLength; i++) {
               const barHeight = dataArray[i] / 2;
